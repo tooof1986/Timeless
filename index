@@ -1,0 +1,23 @@
+document.getElementById('sendOrder').addEventListener('click', ()=>{
+  const table = document.getElementById('tableNumber').value;
+  if(!table){ alert("Veuillez entrer le numéro de table !"); return; }
+
+  let orderText = `Table ${table}\n`;
+  for(const item in cart){
+    if(cart[item] >0) orderText += `${item} x ${cart[item]}\n`;
+  }
+
+  const templateParams = {
+    to_email: "bar.timelessofficiel@gmail.com",  // 🔥 Nouvelle adresse mail
+    table_number: table,
+    order_details: orderText
+  };
+
+  emailjs.send("TON_SERVICE_ID","TON_TEMPLATE_ID",templateParams)
+    .then(()=>{ 
+      document.getElementById('confirmation').innerText="Commande envoyée !"; 
+      for(const item in cart) cart[item]=0; 
+      updateCart();
+    })
+    .catch(()=>{ document.getElementById('confirmation').innerText="Erreur lors de l'envoi."; });
+});
